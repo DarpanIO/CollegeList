@@ -1,116 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-
+import collegeData from './collegeData.json';
 // Sample Dummy Data
-const initialColleges = [
-  {
-    id: 1,
-    name: "College A",
-    rating: 4.5,
-    fees: 50000,
-    userReview: 4.0,
-    featured: true,
-  },
-  {
-    id: 2,
-    name: "College B",
-    rating: 4.2,
-    fees: 45000,
-    userReview: 3.8,
-    featured: false,
-  },
-  {
-    id: 3,
-    name: "College C",
-    rating: 4.2,
-    fees: 45000,
-    userReview: 3.8,
-    featured: false,
-  },
-  {
-    id: 4,
-    name: "College D",
-    rating: 4.2,
-    fees: 45000,
-    userReview: 3.8,
-    featured: false,
-  },
-  {
-    id: 5,
-    name: "College E",
-    rating: 4.2,
-    fees: 45000,
-    userReview: 3.8,
-    featured: false,
-  },
-  {
-    id: 6,
-    name: "College F",
-    rating: 4.2,
-    fees: 45000,
-    userReview: 3.8,
-    featured: false,
-  },
-  {
-    id: 7,
-    name: "College G",
-    rating: 4.2,
-    fees: 45000,
-    userReview: 3.8,
-    featured: false,
-  },
-  {
-    id: 8,
-    name: "College H",
-    rating: 4.2,
-    fees: 45000,
-    userReview: 3.8,
-    featured: false,
-  },
-  {
-    id: 9,
-    name: "College I",
-    rating: 4.2,
-    fees: 45000,
-    userReview: 3.8,
-    featured: false,
-  },
-  {
-    id: 10,
-    name: "College J",
-    rating: 4.2,
-    fees: 45000,
-    userReview: 3.8,
-    featured: false,
-  },
-  {
-    id: 11,
-    name: "College K",
-    rating: 4.2,
-    fees: 45000,
-    userReview: 3.8,
-    featured: false,
-  },
-  {
-    id: 12,
-    name: "College L",
-    rating: 4.2,
-    fees: 45000,
-    userReview: 3.8,
-    featured: false,
-  },
-  {
-    id: 13,
-    name: "College M",
-    rating: 4.2,
-    fees: 45000,
-    userReview: 3.8,
-    featured: false,
-  },
-  // Add more colleges...
-];
 
 const CollegeTable = () => {
+  const initialColleges = collegeData;
+  // console.log(collegeData)
   const [colleges, setColleges] = useState(initialColleges);
+  const [loading, setLoading] = useState(false)
   const [visibleColleges, setVisibleColleges] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     key: "rating",
@@ -162,21 +58,30 @@ const CollegeTable = () => {
   const handleScroll = () => {
     if (
       window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.offsetHeight - 100
+      document.documentElement.offsetHeight
     ) {
-      loadMoreColleges();
+      setLoading(true)
+      // Set a 2-second delay before calling loadMoreColleges
+      setTimeout(() => {
+        loadMoreColleges();
+        // setLoading(false)
+      }, 2000);
+      // loadMoreColleges();
     }
   };
 
   useEffect(() => {
-    const container = containerRef.current;
-    container.addEventListener("scroll", handleScroll);
-    return () => container.removeEventListener("scroll", handleScroll);
+    // const container = containerRef.current;
+    // container.addEventListener("scroll", handleScroll);
+    // return () => container.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [visibleColleges]);
 
   return (
     <div>
       <input
+      class="textbox"
         type="text"
         placeholder="Search by college name..."
         value={searchQuery}
@@ -188,9 +93,10 @@ const CollegeTable = () => {
         <table>
           <thead>
             <tr>
+              <th onClick={() => handleSort("rank")}>Collegedunia Rating</th>
               <th onClick={() => handleSort("name")}>College Name</th>
-              <th onClick={() => handleSort("rating")}>Collegedunia Rating</th>
               <th onClick={() => handleSort("fees")}>Fees</th>
+              <th onClick={() => handleSort("placementAvg")}>Package</th>
               <th onClick={() => handleSort("userReview")}>
                 User Review Rating
               </th>
@@ -198,17 +104,57 @@ const CollegeTable = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredColleges.map((college) => (
-              <tr key={college.id}>
-                <td>{college.name}</td>
-                <td>{college.rating}</td>
-                <td>{college.fees}</td>
-                <td>{college.userReview}</td>
-                <td>{college.featured ? "Yes" : "No"}</td>
-              </tr>
+            {filteredColleges.map((college,i) => (
+              <tr key={i}>
+              <td className="rank">{college.rank}</td>
+              <td className="college-info">
+                <div className="college-header">
+                  <h4>{college.name}</h4>
+                  <p>{college.location}</p>
+                  <span>{college.course}</span> | <span>{college.cutoff}</span>
+                </div>
+                <div className="college-actions">
+                  <button className="apply-btn">Apply Now</button>
+                  <button className="brochure-btn">Download Brochure</button>
+                  <label>
+                    <input type="checkbox" /> Add To Compare
+                  </label>
+                  {college.featured && <span className="featured-badge">Featured</span>}
+                </div>
+              </td>
+              <td className="fees">
+                <div className="fee">{college.fees}</div>
+                <a href="#compare-fees">Compare Fees</a>
+              </td>
+              <td className="placement">
+                <div>Average Package</div>
+                <div>{college.placementAvg}</div>
+                <div>Highest Package</div>
+                <div>{college.placementHigh}</div>
+                <a href="#compare-placement">Compare Placement</a>
+              </td>
+              <td className="reviews">
+                <div>{college.userReview}</div>
+                <p>{college.reviewDetail}</p>
+                <span className="badge">{college.badges[0]}</span>
+              </td>
+              <td className="ranking">
+                <div>{college.ranking}</div>
+                <div>{college.rankingYear}</div>
+              </td>
+            </tr>
             ))}
           </tbody>
         </table>
+        <div style={{
+          width:'100%',
+          display:"flex",
+          justifyContent:"center",
+          alignItems:"center",
+          padding:"20px"
+        }}>
+        {loading && <div class="loader"></div>}
+        </div>
         {!hasMore && <p>No more colleges to display</p>}
       </div>
     </div>
