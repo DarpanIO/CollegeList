@@ -1,0 +1,7 @@
+.table{
+  height: 200px;
+  overflow-y: scroll;
+}
+thead{
+  cursor: pointer;
+}
