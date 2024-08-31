@@ -93,3 +93,21 @@ input.textbox:focus-visible{
   animation: l3 1s infinite linear;
 }
 @keyframes l3 {to{transform: rotate(1turn)}}
+
+.cta{
+  position: absolute;
+  bottom: 15px;
+  right: 2%;
+  text-decoration: none;
+  background-color: #000;
+  color: #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  filter: drop-shadow(0px 0px 0px black);
+}
+.cta:hover{
+  background: #fff;
+  color: black;
+  text-decoration: underline;
+  filter: drop-shadow(0px 0px 2px black);
+}

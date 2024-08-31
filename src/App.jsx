@@ -1,4 +1,5 @@
 import "./App.css";
+import CTA from "./CTA";
 import CollegeTable from "./CollegeTable";
 
 function App() {
@@ -6,6 +7,7 @@ function App() {
   return (
     <>
       <CollegeTable />
+      <CTA />
     </>
   );
 }
